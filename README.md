@@ -248,14 +248,14 @@ Install the package in editable mode with dev dependencies.
 (venv) $ pip install -e .[dev]
 ```
 
-(`nox`)[https://nox.thea.codes/en/stable/] is used to manage various dev functions.
+[`nox`](https://nox.thea.codes/en/stable/) is used to manage various dev functions.
 Start with
 
 ```text
 (venv) $ nox --help
 ```
 
-(`pyenv`)[https://github.com/pyenv/pyenv] is used to manage python versions. 
+[`pyenv`](https://github.com/pyenv/pyenv) is used to manage python versions. 
 To run the nox tests for applicable python version you will first need to install them. 
 In the root project dir run:
 
