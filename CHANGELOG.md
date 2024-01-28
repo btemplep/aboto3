@@ -25,10 +25,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] - 2024-01-28
 
+### Added
+
+Tests for python 3.12
 
 ### Changed
 
 Updated README to reflect recommendations.
+
+### Removed
+
+Support for python 3.7
 
 
 ## [0.1.0] - 2023-06-22

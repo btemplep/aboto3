@@ -3,7 +3,7 @@ import os
 from typing import Any
 
 import boto3
-from moto import mock_ssm
+from moto import mock_aws
 import pytest
 
 from aboto3 import AIOClient
@@ -42,7 +42,7 @@ def param_value() -> str:
 
 @pytest.fixture(scope="function")
 def ssm_client(moto_creds: None) -> Any:
-    with mock_ssm():
+    with mock_aws():
         yield boto3.client("ssm", region_name="us-east-1")
 
 
