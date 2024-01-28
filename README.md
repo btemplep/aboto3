@@ -3,9 +3,11 @@
 `aboto3` is an async boto3 client generator!
 
 There are other boto3-like libraries that offer asyncio but the interface can be quite different from normal `boto3` clients. 
-The goal of `aboto3` is to closely replicate the `boto3` client interface with similar performance to other asyncio libraries!  
+The goal of `aboto3` is to closely replicate the `boto3` client interface with acceptable performance from the python [`ThreadPoolExecutor`](https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ThreadPoolExecutor)!  
 
-> **NOTE** - `aboto3` was created with performance in mind.  Because of this it does not support [`boto3` "Resources"](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/resources.html), and there is no plan to support them. New "Resources" are no longer being added to `boto3`.
+> **API NOTE** - `aboto3` was created with boto3 API compatibility in mind.  Because of this it does not support [`boto3` "Resources"](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/resources.html), and there is no plan to support them. New "Resources" are no longer being added to `boto3`.
+
+> **Performance NOTE** - Because `aboto3` provides an async wrapper around `boto3`, it is not truly async to it's core. It sends a boto3 call to a thread and the thread runs asynchronously. `asyncio` tasks are much lighter weight than threads so if you want to run hundreds of concurrent calls with the best performance, pure async boto3 equivalents are a better fit.
 
 
 ## Tutorial
@@ -130,35 +132,11 @@ aio_pages = asyncio.run(aio_tester())
 
 You can also use `boto3` augmenting libraries since `aboto3` is only a wrapper. 
 
-Like [`aws-assume-role-lib`](https://github.com/benkehoe/aws-assume-role-lib) for easily assuming roles and
-automatically refreshing credentials.
-
-```python
-import asyncio
-
-import aboto3
-from aws_assume_role_lib import assume_role
-import boto3
-
-sess = boto3.Session()
-assumed_sess = assume_role(
-    session=sess, 
-    RoleArn="arn:aws:iam::123123123123:role/my_role_to_assume", 
-    RoleSessionName="tester_short", 
-    DurationSeconds=900
-)
-
-ec2_client = assumed_sess.client("ec2")
-aio_ec2_client = aboto3.AIOClient(ec2_client)
-```
-
 
 ## Optimization 
 
 When an `AIOClient` is created it will automatically create a `ThreadPoolExecutor` to run the boto3 calls asynchronously.  The size of max workers of the pool is determined by the boto3 client's config for `max_pool_connections`. By default this is 10.
 See [botocore Config Reference](https://botocore.amazonaws.com/v1/documentation/api/latest/reference/config.html#botocore-config) for more details.
-
-> **NOTE** - Because `aboto3` provides an async wrapper around `boto3`, it is not truly async to it's core. It sends a boto3 call to a thread and the thread runs asynchronously. There may be a limit to this as asyncio Tasks are generally lighter weight than threads. 
 
 The thread pool adds a small amount of overhead for each `AIOClient` that is created (though this is far less than the overhead of creating a boto3 client).  To save some initialization time or have more control over total number of threads you can provide your own `ThreadPoolExecutor` and share this between clients.
 
