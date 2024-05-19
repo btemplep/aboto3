@@ -1,5 +1,7 @@
 # `aboto3`
 
+## WARNING - This project is archived and was only a test.  Please use fully async clients like `aioboto3`!
+
 `aboto3` is an async boto3 client generator!
 
 There are other boto3-like libraries that offer asyncio but the interface can be quite different from normal `boto3` clients. 
